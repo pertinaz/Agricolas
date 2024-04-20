@@ -2,7 +2,7 @@
 <br>
 Sistema de facturación tienda agrícola
 <br>
-PAREJAS: José David Giraldo y Juan Manuel Agudelo Aguirre
+PAREJAS: José David Marín Giraldo y Juan Manuel Agudelo Aguirre
 <br>
 Docente: Alejandro Rodas Vásquez
 <br>
