@@ -1,8 +1,14 @@
+import sys
+sys.path.append('c:/Users/Czsgt_/Documents/UTP/PROGIII - cleanCodeModule/Proyecto python Segundo parcial/Agricolas')
 import os
-print("Directiorio actual:",os.getcwd())
+print("Directorio actual:",os.getcwd())
+
 from Modelo.productos.productoControl import ProductoControl, ControlPlagas, ControlFertilizantes, Antibiotico
 from Modelo.clientes.cliente import Cliente
 from Modelo.pedidos.factura import Factura
+
+buscarCedula = Cliente.buscarCedula
+mostrarFactura = Factura.mostrarFactura
 
 productos = []
 clientes = []
@@ -14,7 +20,9 @@ def menu():
     print("2. Crear nuevo antibiótico")
     print("3. Crear nuevo cliente")
     print("4. Realizar nuevo pedido")
-    print("5.Salir")
+    print("5. Ver informacion cliente")
+
+    print("6. Salir")
 
 def listaProductos():
     print("\nLISTA DE PRODUCTOS")
@@ -99,6 +107,12 @@ def realizarNuevoPedido():
             print("Ingrese una opción válida.")
     print("Pedido realizado con éxito.")
 
+def historialCliente():
+    cedula = int(input("Cedula cliente: "))
+    if buscarCedula(cedula):
+        mostrarFactura(cedula)
+
+
 while True:
     menu()
     option = input("Seleccione una opción: ")
@@ -111,6 +125,8 @@ while True:
     elif option == "4":
         realizarNuevoPedido()
     elif option == "5":
+        historialCliente() # buscar por cedula
+    elif option == "6":
         print("Sistema cerrado.")
         break
     else:
