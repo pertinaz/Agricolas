@@ -17,4 +17,5 @@ Universidad Tecnológica de Pereira
 ![Debugging first part](https://github.com/pertinaz/Agricolas/assets/87156289/9cfee36c-579c-48da-947f-e7d7802ba2e0)
 
 # Diagrama de Componentes
-![Diagrama de componentes_Agricolas drawio](https://github.com/pertinaz/Agricolas/assets/87156289/3307e6df-be71-404c-b3a3-515797301cbb)
+![Diagrama de componentes_Agricolas](https://github.com/pertinaz/Agricolas/assets/87156289/3307e6df-be71-404c-b3a3-515797301cbb)
+![Diagrama de componentes Agricolas aplicado crud](https://github.com/pertinaz/Agricolas/assets/87156289/925aea0d-20a5-4be7-b949-eb66466ffaaf)
