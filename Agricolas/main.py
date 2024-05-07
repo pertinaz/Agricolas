@@ -3,75 +3,86 @@ sys.path.append('c:/Users/Czsgt_/Documents/UTP/PROGIII - cleanCodeModule/Proyect
 import os
 print("Directorio actual:",os.getcwd())
 
-from Modelo.productos.productoControl import ProductoControl, ControlPlagas, ControlFertilizantes, Antibiotico
+from ui import ui
+menuGeneral= ui.menuGeneral()
+menuProductos = ui.menuProductos()
+menuClientes = ui.menuClientes()
+from Modelo.productos.productoControl import ControlPlagas, ControlFertilizantes, Antibiotico
 from Modelo.clientes.cliente import Cliente
 from Modelo.pedidos.factura import Factura
 
+from Crud.ImplCrudControlPlagas import ControlPlagas
+from Crud.ImplCrudControlFertilizantes import ControlFertilizantes
+from Crud.ImplCrudAntibiotico import Antibiotico
+from Crud.ImplCrudCliente import Cliente
+
+CrearProductoControlPlagas = ControlPlagas.crear
+crearProductoControlFertilizante = ControlFertilizantes.crear
+CrearAntibiotico = Antibiotico.crear
+CrearCliente = Cliente.crear
+
+"""
 buscarCedula = Cliente.buscarCedula
 mostrarFactura = Factura.mostrarFactura
-
-productos = []
+"""
+inventarioProductos = []
 clientes = []
-pedidos = []
+facturas = []
+carritoDeCompras = [] # variable
 
-def menu():
-    print("\nMENU\n")
-    print("1. Crear nuevo producto de control")
-    print("2. Crear nuevo antibiótico")
-    print("3. Crear nuevo cliente")
-    print("4. Realizar nuevo pedido")
-    print("5. Ver informacion cliente")
+#funciones buscar
+def buscarProducto(registro): 
+    print("\nBUSCADOR DE PRODUCTOS")
+    for producto in inventarioProductos:
+        if producto.registroICA == registro:
+            print(f"Nombre producto: {producto.nombreProducto}")
+            print(f"Registro ICA: {producto.registroICA}")
+            print(f"Frecuencia de aplicación: {producto.frecuenciaAplicacion}")
+            print(f"Valor del producto: {producto.valorProducto}")
+            print(f"Cantidad de unidades disponibles: {producto.inventario}")
+        else:
+            print("No se han encontrado coincidencias. Intentalo nuevamente.")
+            continue
 
-    print("6. Salir")
-
-def listaProductos():
-    print("\nLISTA DE PRODUCTOS")
-    n=0
-    for producto in productos:
-        for nombreProducto in producto:     
-            print(f"{n+1}.{nombreProducto}")
-            disponibles = producto.count()
-            print(f"Cantidad de unidades disponibles: {disponibles}")
-
+def buscarCliente(cedula):
+    print("\nBUSCADOR DE CLIENTES")
+    for cliente in clientes:
+        if cliente.cedula == cedula:
+            print(f"Nombre cliente: {cliente.nombre}")
+            print(f"Cedula cliente: {cliente.cedula}")
+            Factura.mostrarFactura(cedula)
+        else:
+            print("No se han encontrado coincidencias. Intentalo nuevamente.")
+            continue
+            
+# funciones crear
 def crearProductoControl():
-    nombre = input("Ingrese el nombre del producto de control: ")
-    registroICA = input("Ingrese el registro ICA del producto: ")
-    frecuenciaAplicacion = input("Ingrese la frecuencia de aplicación del producto: ")
-    valorProducto = float(input("Ingrese el valor del producto: "))
-    disponibleInventario = int(input("Ingrese la cantidad de unidades: "))
-    tipoProducto = input("Ingrese el tipo de producto (Control de plagas/Fertilizantes): ").lower()
+    CrearProductoControlPlagas('Phantom','444555','15 días',30.000,10,'plaga')
+    inventarioProductos.append(CrearProductoControlPlagas)
 
-    if tipoProducto == "plaga":
-        periodoCarencia = int(input("Ingrese el periodo de carencia del producto (en dias): "))
-        nuevoProducto = ControlPlagas(registroICA,nombre,frecuenciaAplicacion,valorProducto,disponibleInventario,periodoCarencia
-        )
+    crearProductoControlFertilizante('Ghost','111222','30 días',80.300,16,'fertilizante')
+    inventarioProductos.append(crearProductoControlFertilizante)
+    print("Productos creados con éxito")
     
-    elif tipoProducto == "fertilizante":
-        ultimaAplicacion = input("Ingrese la fecha de la última aplicación del producto (YYYY-MM-DD): ")
-        nuevoProducto = ControlFertilizantes(registroICA,nombre,frecuenciaAplicacion,valorProducto,disponibleInventario,ultimaAplicacion
-        )
-    else:
-        print("Tipo de producto no válido.")
-    productos.append(nuevoProducto)
-    print("Producto creado con éxito.")
+def crearAntibiotico():
+    CrearAntibiotico('Acetaminofén',100.8,'Bovino',53.500,6)
+    print("Antibiotico creado con éxito")
 
-def crearNuevoAntibiotico():
-    nombre = input("Ingrese el nombre del antibiótico: ")
-    dosis = float(input("Ingrese la dosis del antibiótico (entre 400 y 600 Kg): "))
-    tipoAnimal = input("Ingrese el tipo de animal al que se puede aplicar (Bovinos/Caprinos/Porcinos): ")
-    valorProducto = float(input("Ingrese el precio del antibiótico: "))
-    disponibleInventario = int(input("Ingrese la cantidad de unidades: "))
-    nuevoAntibiotico = Antibiotico(nombre,dosis,tipoAnimal,valorProducto,disponibleInventario)
-    productos.append(nuevoAntibiotico)
-    print("Antibiótico creado con éxito")
-
-def crearNuevoCliente():
-    nombre = input("Ingrese el nombre del cliente: ")
-    cedula = input("Ingrese la cedula del cliente: ")
-    nuevoCliente = Cliente(nombre,cedula)
-    clientes.append(nuevoCliente)
+def crearCliente():
+    CrearCliente('Octavio',123456789)
+    clientes.append(CrearCliente)
     print("Cliente creado con éxito")
 
+# funciones borrar
+"""
+def borrarProducto():
+    
+def borrarCliente():
+    
+def borrarFactura():
+    
+"""
+# funcion para realizar una compra
 def realizarNuevoPedido():
     if len(clientes) == 0:
         print("Debe crear al cliente antes de realizar el pedido.")
@@ -86,11 +97,12 @@ def realizarNuevoPedido():
     procesoCompra = True
     subtotal = 0.0
     while procesoCompra:
-        listaProductos()
+        for producto in inventarioProductos:
+            print(f"{producto}")
         seleccionarProducto = input("Ingrese el nombre del producto que desea agregar al carrito de compra: ")
         seleccionarCantidad = int(input("Ingrese cantidad de unidades que desea agregar al carrito de compra: "))
         
-        for producto in productos:
+        for producto in inventarioProductos:
             if seleccionarProducto == producto.nombreProducto:
                 subtotal += producto.valorProducto * seleccionarCantidad
                 break
@@ -100,34 +112,53 @@ def realizarNuevoPedido():
             fecha = "2024-04-20"
             total = subtotal
             nuevoPedido = Factura(clientes.nombre,seleccionarProducto,fecha,total)
-            pedidos.append(nuevoPedido)
+            facturas.append(nuevoPedido)
 
             procesoCompra = False # Finalizar proceso de compra
         else:
             print("Ingrese una opción válida.")
     print("Pedido realizado con éxito.")
 
-def historialCliente():
-    cedula = int(input("Cedula cliente: "))
-    if buscarCedula(cedula):
-        mostrarFactura(cedula)
-
-
 while True:
-    menu()
+    menuGeneral()
     option = input("Seleccione una opción: ")
     if option == "1":
-        crearProductoControl()
+        while True:
+            menuProductos()
+            opcionProductos = input("Seleccione una opción: ")
+            if opcionProductos == '1':
+                crearProductoControl()
+            elif opcionProductos == '2':
+                crearAntibiotico()
+            elif opcionProductos == '3':
+                1 #borrarProducto()
+            elif opcionProductos == '4':
+                registro = input("Ingrese registro ICA del producto: ")
+                buscarProducto(registro)
+            elif opcionProductos == '5':
+                break #regresar al menu principal
+            else:
+                print("Ingrese una opción válida.")
+
     elif option == "2":
-        crearNuevoAntibiotico()
+        while True:
+            menuClientes()
+            opcionClientes = input("Seleccione una opción: ")
+            if opcionClientes == '1':
+                crearCliente()
+            elif opcionClientes == '2':
+                1 #borrarCliente()
+            elif opcionClientes == '3':
+                buscarCliente()
+            elif opcionClientes == '4':
+                break #regresar al menu principal
+            else:
+                print("Ingrese una opción válida.")
+
     elif option == "3":
-        crearNuevoCliente()
-    elif option == "4":
         realizarNuevoPedido()
-    elif option == "5":
-        historialCliente() # buscar por cedula
-    elif option == "6":
+    elif option == "4":
         print("Sistema cerrado.")
-        break
+        break #salir del programa principal.
     else:
         print("Opción no válida. Inténtelo nuevamente")
